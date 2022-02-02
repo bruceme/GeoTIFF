@@ -38,9 +38,9 @@ defmodule GeoTIFF do
       iex> GeoTIFF.parse_geotiff_file("res/Sample.tiff")
       %GeoTIFF{
               easting: 110334.52652367248,
-              f: 1.952412414857403,
+              f: 1.9524124148574027,
               l0: -1.6580627893946132,
-              n: 0.630496251388787,
+              n: 0.6304962513887873,
               northing: -85146.60133479013,
               p0: 0.6870779488684344,
               p1: 0.7853981633974483,
@@ -141,7 +141,7 @@ defmodule GeoTIFF do
   ## Examples
 
       iex> GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934})
-      {-95.00004816930117, 38.999426844328546}
+      {-95.00004816930117, 38.99942684432852}
 
   """
   def pixel_to_coord(g, pixel) do

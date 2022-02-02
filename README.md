@@ -10,8 +10,7 @@ See https://www.linz.govt.nz/data/geodetic-system/coordinate-conversion/projecti
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `geotiff` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `geotiff` to your list of dependencies in `mix.exs` as follows:
 
 ```elixir
 def deps do
