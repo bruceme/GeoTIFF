@@ -15,5 +15,4 @@ defmodule GeoTIFFTest do
     assert abs(lng - -95.0) < 0.001
     assert abs(lat - 39.0) < 0.001
   end
-
 end
