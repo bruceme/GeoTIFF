@@ -7,7 +7,16 @@ defmodule GeoTIFF.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+
+      # Docs
+      name: "GeoTIFF",
+      source_url: "https://github.com/bruceme/GeoTIFF",
+      docs: [
+        main: "GeoTIFF", # The main page in the docs
+        logo: "res/GeoTIFF_Logo.png",
+        extras: ["README.md"]
+      ]
     ]
   end
 
