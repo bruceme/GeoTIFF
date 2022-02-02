@@ -1,6 +1,8 @@
 defmodule GeoTIFF.MixProject do
   use Mix.Project
 
+  @github "https://github.com/bruceme/GeoTIFF"
+
   def project do
     [
       app: :geotiff,
@@ -11,7 +13,12 @@ defmodule GeoTIFF.MixProject do
 
       # Docs
       name: "GeoTIFF",
-      source_url: "https://github.com/bruceme/GeoTIFF",
+      source_url: @github,
+      package: [
+        description: "GeoTIFF -- reads specially formatted TIFF files that contain metadata abot the geographics transformation.",
+        links: %{Github: @github},
+        licenses: ["Apache 2"],
+      ],
       docs: [
         # The main page in the docs
         main: "GeoTIFF",
