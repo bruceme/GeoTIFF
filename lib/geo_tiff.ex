@@ -9,8 +9,8 @@ defmodule GeoTIFF do
   """
 
   # These are the parameters used to convert geographic lat/long to pixel row/col
-  defstruct xRes: 0,
-            yRes: 0,
+  defstruct x_res: 0,
+            y_res: 0,
             easting: 0,
             northing: 0,
             p0: 0,
@@ -19,7 +19,7 @@ defmodule GeoTIFF do
             p2: 0,
             n: 0,
             f: 0,
-            rho0: 0
+            rho_0: 0
 
   # elipsoid constant
   @f 1.0 / 298.257222101004
@@ -45,7 +45,7 @@ defmodule GeoTIFF do
         p0: 0.6870779488684344,
         p1: 0.7853981633974483,
         p2: 0.5759586531581288,
-        rho0: 7788636.19968158,
+        rho_0: 7788636.19968158,
         xRes: -21.168529658732837,
         yRes: 21.16791991605589
       }
@@ -53,9 +53,9 @@ defmodule GeoTIFF do
   """
   def parse_geotiff_file(filename) do
     {:ok, tags} = ExifParser.parse_tiff_file(filename)
-    doubles = BitUtils.toFloatList(tags.ifd0.geo_doubleparams)
+    doubles = BitUtils.to_float_list(tags.ifd0.geo_doubleparams)
 
-    hasScale = Map.has_key?(tags.ifd0, :geo_pixelscale)
+    has_scale = Map.has_key?(tags.ifd0, :geo_pixelscale)
 
     keymap =
       Enum.chunk_every(tags.ifd0.geo_keydirectory, 4)
@@ -73,15 +73,15 @@ defmodule GeoTIFF do
     # ProjStdParallel2GeoKey
     p2 = Enum.at(doubles, keymap[3079]) |> d2r
 
-    {n, f, rho0} = compute_projections({p0, p1, p2})
+    {n, f, rho_0} = compute_projections({p0, p1, p2})
 
-    if hasScale do
-      [yRes, xRes, _] = BitUtils.toFloatList(tags.ifd0.geo_pixelscale)
-      [_, _, _, easting, northing, _] = BitUtils.toFloatList(tags.ifd0.geo_tiepoints)
+    if has_scale do
+      [y_res, x_res, _] = BitUtils.to_float_list(tags.ifd0.geo_pixelscale)
+      [_, _, _, easting, northing, _] = BitUtils.to_float_list(tags.ifd0.geo_tiepoints)
 
       %GeoTIFF{
-        xRes: -xRes,
-        yRes: yRes,
+        x_res: -x_res,
+        y_res: y_res,
         easting: -easting,
         northing: -northing,
         p0: p0,
@@ -90,15 +90,15 @@ defmodule GeoTIFF do
         p2: p2,
         n: n,
         f: f,
-        rho0: rho0
+        rho_0: rho_0
       }
     else
-      [yRes, _, _, easting, _, xRes, _, northing] =
-        BitUtils.toFloatList(tags.ifd0.geo_transmatrix)
+      [y_res, _, _, easting, _, x_res, _, northing] =
+        BitUtils.to_float_list(tags.ifd0.geo_transmatrix)
 
       %GeoTIFF{
-        xRes: xRes,
-        yRes: yRes,
+        x_res: x_res,
+        y_res: y_res,
         easting: -easting,
         northing: -northing,
         p0: p0,
@@ -107,7 +107,7 @@ defmodule GeoTIFF do
         p2: p2,
         n: n,
         f: f,
-        rho0: rho0
+        rho_0: rho_0
       }
     end
   end
@@ -131,7 +131,7 @@ defmodule GeoTIFF do
     rho = @a * g.f * :math.pow(t(p), g.n)
 
     e = g.easting + rho * :math.sin(gamma)
-    n = g.northing + g.rho0 - rho * :math.cos(gamma)
+    n = g.northing + g.rho_0 - rho * :math.cos(gamma)
 
     {Kernel.trunc(e / -g.xRes), Kernel.trunc(n / -g.yRes)}
   end
@@ -150,13 +150,13 @@ defmodule GeoTIFF do
     e = col * -g.xRes - g.easting
     n = row * -g.yRes - g.northing
 
-    rhoN = g.rho0 - n
+    rho_n = g.rho_0 - n
 
-    rho2 = :math.sqrt(e * e + rhoN * rhoN)
+    rho2 = :math.sqrt(e * e + rho_n * rho_n)
 
     t = :math.pow(rho2 / (@a * g.f), 1.0 / g.n)
 
-    phi = :math.atan(e / (g.rho0 - n))
+    phi = :math.atan(e / (g.rho_0 - n))
 
     # First approximation
     p = inv_phi(t)
@@ -190,9 +190,9 @@ defmodule GeoTIFF do
         (:math.log(t1) - :math.log(t2))
 
     f = m1 / (n * :math.pow(t1, n))
-    rho0 = @a * f * :math.pow(t0, n)
+    rho_0 = @a * f * :math.pow(t0, n)
 
-    {n, f, rho0}
+    {n, f, rho_0}
   end
 
   defp d2r(deg), do: deg * :math.pi() / 180.0
@@ -200,16 +200,16 @@ defmodule GeoTIFF do
   defp r2d(rad), do: 180.0 * rad / :math.pi()
 
   defp m(phi) do
-    sinPhi = :math.sin(phi)
-    :math.cos(phi) / :math.sqrt(1.0 - @e * @e * sinPhi * sinPhi)
+    sin_phi = :math.sin(phi)
+    :math.cos(phi) / :math.sqrt(1.0 - @e * @e * sin_phi * sin_phi)
   end
 
   defp t(phi) do
-    sinPhi = :math.sin(phi)
+    sin_phi = :math.sin(phi)
 
     :math.tan(:math.pi() / 4.0 - phi / 2.0) /
       :math.pow(
-        (1.0 - @e * sinPhi) / (1.0 + @e * sinPhi),
+        (1.0 - @e * sin_phi) / (1.0 + @e * sin_phi),
         @e / 2.0
       )
   end
