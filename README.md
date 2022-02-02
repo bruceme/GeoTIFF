@@ -1,6 +1,12 @@
 # GeoTIFF
 
-**TODO: Add description**
+This library reads specially formatted TIFF files that contain metadata abot the geographics transformation.
+This implimentation is specific to TIFF files sourced from NOAA charts.
+
+Lambert Conformal Conic to Geographic Transformation Formulae
+
+See https://www.linz.govt.nz/data/geodetic-system/coordinate-conversion/projection-conversions/lambert-conformal-conic-geographic
+ 
 
 ## Installation
 
