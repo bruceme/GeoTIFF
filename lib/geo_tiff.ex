@@ -1,9 +1,12 @@
 defmodule GeoTIFF do
   @moduledoc """
-  Documentation for `GeoTIFF`.
+  This library reads specially formatted TIFF files that contain metadata abot the geographics transformation.
+  This implimentation is specific to TIFF files sourced from NOAA charts.
+
+  Lambert Conformal Conic to Geographic Transformation Formulae
+
+  See https://www.linz.govt.nz/data/geodetic-system/coordinate-conversion/projection-conversions/lambert-conformal-conic-geographic
   """
-  # Lambert Conformal Conic to Geographic Transformation Formulae
-  # See https://www.linz.govt.nz/data/geodetic-system/coordinate-conversion/projection-conversions/lambert-conformal-conic-geographic
 
   # These are the parameters used to convert geographic lat/long to pixel row/col
   defstruct xRes: 0, yRes: 0, easting: 0, northing: 0, p0: 0,l0: 0,p1: 0,p2: 0,n: 0,f: 0,rho0: 0
