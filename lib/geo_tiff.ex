@@ -37,19 +37,18 @@ defmodule GeoTIFF do
 
       iex> GeoTIFF.parse_geotiff_file("res/Sample.tiff")
       %GeoTIFF{
-        easting: 110334.52652367248,
-        f: 1.9524124148574027,
-        l0: -1.6580627893946132,
-        n: 0.6304962513887873,
-        northing: -85146.60133479013,
-        p0: 0.6870779488684344,
-        p1: 0.7853981633974483,
-        p2: 0.5759586531581288,
-        rho_0: 7788636.19968158,
-        x_res: -21.168529658732837,
-        y_res: 21.16791991605589
-      }
-
+              easting: 110334.52652367248,
+              f: 1.952412414857403,
+              l0: -1.6580627893946132,
+              n: 0.630496251388787,
+              northing: -85146.60133479013,
+              p0: 0.6870779488684344,
+              p1: 0.7853981633974483,
+              p2: 0.5759586531581288,
+              rho_0: 7788636.19968158,
+              x_res: -21.168529658732837,
+              y_res: 21.16791991605589
+            }
   """
   def parse_geotiff_file(filename) do
     {:ok, tags} = ExifParser.parse_tiff_file(filename)
@@ -142,7 +141,7 @@ defmodule GeoTIFF do
   ## Examples
 
       iex> GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934})
-      {-95.00004816930117, 38.99942684432852}
+      {-95.00004816930117, 38.999426844328546}
 
   """
   def pixel_to_coord(g, pixel) do
@@ -174,7 +173,7 @@ defmodule GeoTIFF do
 
     l = r2d(phi / g.n + g.l0)
 
-    {l, p}
+    {l |> Float.round(15), p |> Float.round(15)}
   end
 
   defp compute_projections(ps) do
@@ -192,7 +191,8 @@ defmodule GeoTIFF do
     f = m1 / (n * :math.pow(t1, n))
     rho_0 = @a * f * :math.pow(t0, n)
 
-    {n, f, rho_0}
+    # some environments get rounding errors
+    {n |> Float.round(15), f|> Float.round(15), rho_0|> Float.round(15)}
   end
 
   defp d2r(deg), do: deg * :math.pi() / 180.0
