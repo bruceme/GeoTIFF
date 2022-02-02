@@ -35,7 +35,7 @@ defmodule GeoTIFF do
 
   ## Examples
 
-      iex> geotiff = GeoTIFF.parse_geotiff_file("res/Sample.tiff")
+      iex> GeoTIFF.parse_geotiff_file("res/Sample.tiff")
       %GeoTIFF{
         easting: 110334.52652367248,
         f: 1.9524124148574027,
@@ -46,8 +46,8 @@ defmodule GeoTIFF do
         p1: 0.7853981633974483,
         p2: 0.5759586531581288,
         rho_0: 7788636.19968158,
-        xRes: -21.168529658732837,
-        yRes: 21.16791991605589
+        x_res: -21.168529658732837,
+        y_res: 21.16791991605589
       }
 
   """
@@ -117,7 +117,7 @@ defmodule GeoTIFF do
 
   ## Examples
 
-      iex> pix = GeoTIFF.coord_to_pixel(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {-95, 39})
+      iex> GeoTIFF.coord_to_pixel(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {-95, 39})
       {5212, 5934}
 
   """
@@ -133,7 +133,7 @@ defmodule GeoTIFF do
     e = g.easting + rho * :math.sin(gamma)
     n = g.northing + g.rho_0 - rho * :math.cos(gamma)
 
-    {Kernel.trunc(e / -g.xRes), Kernel.trunc(n / -g.yRes)}
+    {Kernel.trunc(e / -g.x_res), Kernel.trunc(n / -g.y_res)}
   end
 
   @doc """
@@ -141,14 +141,14 @@ defmodule GeoTIFF do
 
   ## Examples
 
-      iex> pix = GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934})
+      iex> GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934})
       {-95.00004816930117, 38.99942684432852}
 
   """
   def pixel_to_coord(g, pixel) do
     {col, row} = pixel
-    e = col * -g.xRes - g.easting
-    n = row * -g.yRes - g.northing
+    e = col * -g.x_res - g.easting
+    n = row * -g.y_res - g.northing
 
     rho_n = g.rho_0 - n
 

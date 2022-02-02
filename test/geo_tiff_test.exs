@@ -4,7 +4,7 @@ defmodule GeoTIFFTest do
 
   test "read tiff header" do
     {:ok, tags} = ExifParser.parse_tiff_file("res/Sample.tiff")
-    doubles = BitUtils.toFloatList(tags.ifd0.geo_doubleparams)
+    doubles = BitUtils.to_float_list(tags.ifd0.geo_doubleparams)
     assert Enum.any?(doubles)
   end
 
