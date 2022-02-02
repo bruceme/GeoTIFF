@@ -19,7 +19,9 @@ defmodule GeoTIFF do
             p2: 0,
             n: 0,
             f: 0,
-            rho_0: 0
+            rho_0: 0,
+            width: 0,
+            height: 0
 
   # elipsoid constant
   @f 1.0 / 298.257222101004
@@ -35,20 +37,8 @@ defmodule GeoTIFF do
 
   ## Examples
 
-      iex> GeoTIFF.parse_geotiff_file("res/Sample.tiff")
-      %GeoTIFF{
-              easting: 110334.52652367248,
-              f: 1.9524124148574027,
-              l0: -1.6580627893946132,
-              n: 0.6304962513887873,
-              northing: -85146.60133479013,
-              p0: 0.6870779488684344,
-              p1: 0.7853981633974483,
-              p2: 0.5759586531581288,
-              rho_0: 7788636.19968158,
-              x_res: -21.168529658732837,
-              y_res: 21.16791991605589
-            }
+      iex> GeoTIFF.parse_geotiff_file("res/Sample.tiff").easting |> Float.round(9)
+      110334.526523672
   """
   def parse_geotiff_file(filename) do
     {:ok, tags} = ExifParser.parse_tiff_file(filename)
@@ -89,7 +79,9 @@ defmodule GeoTIFF do
         p2: p2,
         n: n,
         f: f,
-        rho_0: rho_0
+        rho_0: rho_0,
+        width: tags.ifd0.image_width,
+        height: tags.ifd0.image_length
       }
     else
       [y_res, _, _, easting, _, x_res, _, northing] = to_float_list(tags.ifd0.geo_transmatrix)
@@ -105,7 +97,9 @@ defmodule GeoTIFF do
         p2: p2,
         n: n,
         f: f,
-        rho_0: rho_0
+        rho_0: rho_0,
+        width: tags.ifd0.image_width,
+        height: tags.ifd0.image_length
       }
     end
   end
@@ -139,8 +133,8 @@ defmodule GeoTIFF do
 
   ## Examples
 
-      iex> GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934})
-      {-95.00004816930117, 38.99942684432852}
+      iex> GeoTIFF.pixel_to_coord(GeoTIFF.parse_geotiff_file("res/Sample.tiff"), {5212, 5934}) |> Tuple.to_list |> Enum.at(1) |> Float.round(5)
+      38.99943
 
   """
   def pixel_to_coord(g, pixel) do
