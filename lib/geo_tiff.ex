@@ -52,7 +52,7 @@ defmodule GeoTIFF do
   """
   def parse_geotiff_file(filename) do
     {:ok, tags} = ExifParser.parse_tiff_file(filename)
-    doubles = BitUtils.to_float_list(tags.ifd0.geo_doubleparams)
+    doubles = to_float_list(tags.ifd0.geo_doubleparams)
 
     has_scale = Map.has_key?(tags.ifd0, :geo_pixelscale)
 
@@ -75,8 +75,8 @@ defmodule GeoTIFF do
     {n, f, rho_0} = compute_projections({p0, p1, p2})
 
     if has_scale do
-      [y_res, x_res, _] = BitUtils.to_float_list(tags.ifd0.geo_pixelscale)
-      [_, _, _, easting, northing, _] = BitUtils.to_float_list(tags.ifd0.geo_tiepoints)
+      [y_res, x_res, _] = to_float_list(tags.ifd0.geo_pixelscale)
+      [_, _, _, easting, northing, _] = to_float_list(tags.ifd0.geo_tiepoints)
 
       %GeoTIFF{
         x_res: -x_res,
@@ -92,8 +92,7 @@ defmodule GeoTIFF do
         rho_0: rho_0
       }
     else
-      [y_res, _, _, easting, _, x_res, _, northing] =
-        BitUtils.to_float_list(tags.ifd0.geo_transmatrix)
+      [y_res, _, _, easting, _, x_res, _, northing] = to_float_list(tags.ifd0.geo_transmatrix)
 
       %GeoTIFF{
         x_res: x_res,
@@ -215,4 +214,11 @@ defmodule GeoTIFF do
   end
 
   defp inv_phi(phi), do: :math.pi() / 2.0 - 2.0 * :math.atan(phi)
+
+  defp to_float_list(binary) when bit_size(binary) < 64, do: []
+
+  defp to_float_list(binary) do
+    <<f::float-little, rest::bits>> = binary
+    [f | to_float_list(rest)]
+  end
 end

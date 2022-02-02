@@ -15,9 +15,10 @@ defmodule GeoTIFF.MixProject do
       name: "GeoTIFF",
       source_url: @github,
       package: [
-        description: "GeoTIFF -- reads specially formatted TIFF files that contain metadata abot the geographics transformation.",
+        description:
+          "GeoTIFF -- reads specially formatted TIFF files that contain metadata abot the geographics transformation.",
         links: %{Github: @github},
-        licenses: ["Apache 2"],
+        licenses: ["Apache 2"]
       ],
       docs: [
         # The main page in the docs
@@ -39,8 +40,7 @@ defmodule GeoTIFF.MixProject do
   defp deps do
     [
       {:exif_parser, github: "bruceme/exif_parser", branch: "feature/geotiff"},
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      #      {:exif_parser, "~> 0.2.5", only: :dev, runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
