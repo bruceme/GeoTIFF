@@ -173,7 +173,7 @@ defmodule GeoTIFF do
 
     l = r2d(phi / g.n + g.l0)
 
-    {l |> Float.round(15), p |> Float.round(15)}
+    {l, p}
   end
 
   defp compute_projections(ps) do
@@ -192,7 +192,7 @@ defmodule GeoTIFF do
     rho_0 = @a * f * :math.pow(t0, n)
 
     # some environments get rounding errors
-    {n |> Float.round(15), f|> Float.round(15), rho_0|> Float.round(15)}
+    {n, f, rho_0}
   end
 
   defp d2r(deg), do: deg * :math.pi() / 180.0

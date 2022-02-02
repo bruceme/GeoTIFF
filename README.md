@@ -20,6 +20,13 @@ def deps do
   ]
 end
 ```
+#Known Issue
+
+On the Mac, the doctests fail for rounding errors, this can likely be fixed, but at the expense of potential precision.
+
+left:  {-95.00004816930117, 38.999426844328546}
+right: {-95.00004816930117, 38.99942684432852}
+
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
