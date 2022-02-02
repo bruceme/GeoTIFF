@@ -20,7 +20,7 @@ def deps do
   ]
 end
 ```
-#Known Issue
+## Known Issue
 
 On the Mac, the doctests fail for rounding errors, this can likely be fixed, but at the expense of potential precision.
 
