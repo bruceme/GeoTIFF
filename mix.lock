@@ -1,0 +1,3 @@
+%{
+  "exif_parser": {:git, "https://github.com/bruceme/exif_parser.git", "04d72d2979322eaa1b04d03c42460bbb424d4b11", [branch: "feature/geotiff"]},
+}
