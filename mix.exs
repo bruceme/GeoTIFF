@@ -39,8 +39,7 @@ defmodule GeoTIFF.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:exif_parser, github: "bruceme/exif_parser", branch: "feature/geotiff"},
-      #      {:exif_parser, "~> 0.2.5", only: :dev, runtime: false},
+      {:exif_parser, "~> 0.3.0", only: :dev, runtime: false},
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
     ]
